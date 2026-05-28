@@ -1,0 +1,8 @@
+{
+  "ships": [
+    { "name": "ONE TRIUMPH", "color": "#E67E22" },
+    { "name": "ONE TRIBUTE", "color": "#2980B9" }
+  ],
+  "history_days": 0,
+  "title": "ONE Container Tracker"
+}

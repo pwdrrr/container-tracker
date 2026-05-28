@@ -1,0 +1,66 @@
+name: Update ship positions
+
+on:
+  schedule:
+    # Stündlich (GitHub-Cron startet ggf. ein paar Minuten verzögert)
+    - cron: "5 * * * *"
+  workflow_dispatch: {}  # manuelles Auslösen
+  push:
+    branches: [main]
+    paths:
+      - "public/**"
+      - "scripts/**"
+      - "config.json"
+      - ".github/workflows/update.yml"
+
+permissions:
+  contents: write   # damit der Bot positions.json committen darf
+
+concurrency:
+  group: update-positions
+  cancel-in-progress: false
+
+jobs:
+  fetch-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: Install Python deps
+        run: pip install -r scripts/requirements.txt
+
+      - name: Fetch positions
+        # Bei Push-Events nur dann scrapen, wenn Scraper-Code oder Config geändert
+        # wurde — sonst direkt das vorhandene positions.json deployen.
+        if: github.event_name != 'push' || contains(github.event.head_commit.modified, 'config.json') || contains(toJson(github.event.head_commit), 'scripts/')
+        run: python scripts/update.py
+
+      - name: Commit changes
+        if: github.event_name != 'push'
+        run: |
+          if [[ -n "$(git status --porcelain public/data/positions.json)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add public/data/positions.json
+            git commit -m "data: update positions $(date -u +'%Y-%m-%d %H:%M UTC') [skip ci]"
+            git push
+          else
+            echo "Keine Datenänderung — nichts zu committen."
+          fi
+
+      - name: Deploy to Netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID:    ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          npx --yes netlify-cli@latest deploy \
+            --prod \
+            --dir=public \
+            --message="cron $(date -u +'%Y-%m-%d %H:%M UTC')"
