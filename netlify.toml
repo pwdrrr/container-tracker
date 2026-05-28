@@ -3,6 +3,10 @@
   # Kein Build-Schritt — reine statische Seite.
   command = "echo 'no build step'"
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 # Verhindert dass Netlify die JSON ewig cached — damit der Auto-Refresh im
 # Browser auch wirklich neue Daten sieht.
 [[headers]]

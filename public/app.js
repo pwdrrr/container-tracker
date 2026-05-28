@@ -11,6 +11,7 @@ const els = {
   updated:  document.getElementById("updated"),
   dot:      document.getElementById("status-dot"),
   reload:   document.getElementById("reload"),
+  refresh:  document.getElementById("refresh"),
   cards:    document.getElementById("cards"),
   map:      document.getElementById("map"),
   chart:    document.getElementById("km-chart"),
@@ -328,6 +329,85 @@ els.speed.addEventListener("change", e => {
   showSpeed = e.target.checked;
   if (lastData) renderChart(lastData);
 });
+
+els.refresh.addEventListener("click", triggerFreshFetch);
+
+// ----- Manueller Trigger via Netlify-Function -----
+
+async function triggerFreshFetch() {
+  const btn = els.refresh;
+  const originalLabel = btn.textContent;
+  setRefreshState("loading", "⏳ Lauf gestartet …");
+
+  let dispatched = false;
+  try {
+    const r = await fetch("/api/refresh", { method: "POST" });
+    const data = await r.json().catch(() => ({}));
+    if (r.status === 429) {
+      setRefreshState("err", `Cooldown — ${data.retry_in_s || 60}s warten`);
+      restoreLater(btn, originalLabel, 5_000);
+      return;
+    }
+    if (!r.ok) {
+      console.error("refresh fehlgeschlagen", data);
+      setRefreshState("err", "Fehler — siehe Konsole");
+      restoreLater(btn, originalLabel, 6_000);
+      return;
+    }
+    dispatched = true;
+  } catch (e) {
+    setRefreshState("err", "Netzwerk-Fehler");
+    restoreLater(btn, originalLabel, 6_000);
+    return;
+  }
+
+  // Workflow-Lauf dauert typisch ~60-90s. Wir pollen positions.json
+  // alle 5s und vergleichen updated_at. Bei neuerem Wert → fertig.
+  const baseline = lastData?.updated_at || "";
+  const start = Date.now();
+  const timeoutMs = 180_000; // 3 min Geduld
+
+  while (Date.now() - start < timeoutMs) {
+    const secs = Math.floor((Date.now() - start) / 1000);
+    setRefreshState("loading", `⏳ läuft … (${secs}s)`);
+    await sleep(5_000);
+    try {
+      const r = await fetch(`data/positions.json?probe=${Date.now()}`, { cache: "no-store" });
+      if (!r.ok) continue;
+      const d = await r.json();
+      if (d.updated_at && d.updated_at > baseline) {
+        // Neue Daten — komplettes Re-Render
+        lastData = d;
+        updateHeader(d);
+        renderCards(d);
+        renderMap(d);
+        renderChart(d);
+        setRefreshState("success", "✓ Frisch geholt");
+        restoreLater(btn, originalLabel, 4_000);
+        return;
+      }
+    } catch (e) { /* ignore, retry */ }
+  }
+
+  setRefreshState("err", "Timeout — später erneut versuchen");
+  restoreLater(btn, originalLabel, 6_000);
+}
+
+function setRefreshState(stateClass, label) {
+  els.refresh.disabled = true;
+  els.refresh.className = stateClass;
+  els.refresh.textContent = label;
+}
+
+function restoreLater(btn, label, ms) {
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.className = "";
+    btn.textContent = label;
+  }, ms);
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 loadData();
 setInterval(loadData, REFRESH_MS);

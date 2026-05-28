@@ -53,9 +53,25 @@ header .dot.stale { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
 header .dot.err { background: var(--err); box-shadow: 0 0 8px var(--err); }
 header button {
   background: transparent; color: var(--fg); border: 1px solid var(--border);
-  border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 15px;
+  border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 13px;
+  font-family: inherit;
 }
-header button:hover { background: var(--bg-elev2); }
+header button:hover:not(:disabled) { background: var(--bg-elev2); }
+header button:disabled { opacity: 0.55; cursor: not-allowed; }
+header button#refresh { font-weight: 500; }
+header button#refresh.loading {
+  background: var(--bg-elev2);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+header button#refresh.success {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+header button#refresh.err {
+  border-color: var(--err);
+  color: var(--err);
+}
 
 main {
   max-width: 1400px;
