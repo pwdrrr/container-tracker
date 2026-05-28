@@ -2,8 +2,8 @@ name: Update ship positions
 
 on:
   schedule:
-    # Stündlich (GitHub-Cron startet ggf. ein paar Minuten verzögert)
-    - cron: "5 * * * *"
+    # Alle 4 Stunden (00:05, 04:05, 08:05, 12:05, 16:05, 20:05 UTC)
+    - cron: "5 */4 * * *"
   workflow_dispatch: {}  # manuelles Auslösen
   push:
     branches: [main]
