@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Hintergrund: nachtblauer Verlauf -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a2433"/>
+      <stop offset="1" stop-color="#0a1018"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2980b9"/>
+      <stop offset="1" stop-color="#1a5680"/>
+    </linearGradient>
+    <linearGradient id="seaFront" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f6da3"/>
+      <stop offset="1" stop-color="#0f4a72"/>
+    </linearGradient>
+    <linearGradient id="hull" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e67e22"/>
+      <stop offset="1" stop-color="#b45a10"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" fill="url(#bg)"/>
+
+  <!-- Mond/Sonne -->
+  <circle cx="400" cy="120" r="42" fill="#f4d35e" opacity="0.95"/>
+  <circle cx="412" cy="110" r="42" fill="#1a2433"/>
+
+  <!-- Hintere Welle -->
+  <path d="M 0 330 Q 96 310 192 320 T 384 320 T 512 318 L 512 360 L 0 360 Z" fill="url(#sea)"/>
+
+  <!-- Rauch -->
+  <circle cx="285" cy="180" r="14" fill="#fff" opacity="0.18"/>
+  <circle cx="305" cy="166" r="11" fill="#fff" opacity="0.14"/>
+  <circle cx="322" cy="156" r="8"  fill="#fff" opacity="0.10"/>
+
+  <!-- Schornstein -->
+  <rect x="260" y="200" width="36" height="80" fill="#34495e"/>
+  <rect x="258" y="196" width="40" height="10" fill="#2c3e50"/>
+  <rect x="270" y="218" width="16" height="14" fill="#e74c3c"/>
+
+  <!-- Aufbau / Brücke -->
+  <rect x="180" y="232" width="80" height="58" fill="#ecf0f1"/>
+  <rect x="186" y="240" width="10" height="12" fill="#34495e"/>
+  <rect x="202" y="240" width="10" height="12" fill="#34495e"/>
+  <rect x="218" y="240" width="10" height="12" fill="#34495e"/>
+  <rect x="234" y="240" width="10" height="12" fill="#34495e"/>
+  <rect x="250" y="240" width="6"  height="12" fill="#34495e"/>
+
+  <!-- Container — gestapelt -->
+  <g>
+    <!-- vordere Reihe -->
+    <rect x="300" y="260" width="36" height="30" fill="#e74c3c"/>
+    <rect x="338" y="260" width="36" height="30" fill="#27ae60"/>
+    <rect x="376" y="260" width="36" height="30" fill="#f1c40f"/>
+    <!-- hintere Reihe -->
+    <rect x="300" y="228" width="36" height="30" fill="#27ae60"/>
+    <rect x="338" y="228" width="36" height="30" fill="#f1c40f"/>
+    <rect x="376" y="228" width="36" height="30" fill="#e74c3c"/>
+    <!-- oben drauf -->
+    <rect x="338" y="196" width="36" height="30" fill="#9b59b6"/>
+  </g>
+
+  <!-- Rumpf -->
+  <path d="M 70 290 L 442 290 L 408 360 L 104 360 Z" fill="url(#hull)" stroke="#7a3d09" stroke-width="2"/>
+  <!-- Bug-Akzent (weisser Streifen) -->
+  <rect x="78" y="308" width="356" height="6" fill="#f5f7fa" opacity="0.7"/>
+  <!-- Bullaugen -->
+  <circle cx="120" cy="328" r="4" fill="#f4d35e"/>
+  <circle cx="148" cy="328" r="4" fill="#f4d35e"/>
+  <circle cx="176" cy="328" r="4" fill="#f4d35e"/>
+  <circle cx="204" cy="328" r="4" fill="#f4d35e"/>
+  <circle cx="232" cy="328" r="4" fill="#f4d35e"/>
+  <circle cx="260" cy="328" r="4" fill="#f4d35e"/>
+
+  <!-- Vordere Welle (überlagert den Bug ein bisschen) -->
+  <path d="M 0 370 Q 80 358 160 370 T 320 370 T 512 368 L 512 412 L 0 412 Z" fill="url(#seaFront)"/>
+  <!-- Schaum -->
+  <path d="M 50 370 Q 80 364 110 370 T 170 370" stroke="#fff" stroke-width="3" fill="none" opacity="0.6"/>
+  <path d="M 360 370 Q 390 364 420 370 T 480 370" stroke="#fff" stroke-width="3" fill="none" opacity="0.6"/>
+
+  <!-- Ganz vorne nochmal Welle -->
+  <path d="M 0 410 Q 96 400 192 408 T 384 410 T 512 408 L 512 480 L 0 480 Z" fill="#0a3550"/>
+  <path d="M 0 460 Q 96 450 192 458 T 384 460 T 512 458 L 512 512 L 0 512 Z" fill="#062338"/>
+</svg>

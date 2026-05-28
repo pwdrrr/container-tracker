@@ -6,3 +6,6 @@ __pycache__/
 .vscode/
 .claude/
 node_modules/
+
+# Local Netlify folder
+.netlify

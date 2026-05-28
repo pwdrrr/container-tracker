@@ -37,6 +37,9 @@ html, body {
 header {
   display: flex; justify-content: space-between; align-items: center;
   padding: 14px 22px;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  padding-left: calc(22px + env(safe-area-inset-left, 0px));
+  padding-right: calc(22px + env(safe-area-inset-right, 0px));
   background: var(--bg-elev);
   border-bottom: 1px solid var(--border);
   position: sticky; top: 0; z-index: 100;
