@@ -11,6 +11,7 @@ on:
       - "public/**"
       - "scripts/**"
       - "config.json"
+      - "netlify.toml"
       - ".github/workflows/update.yml"
 
 permissions:
